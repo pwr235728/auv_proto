@@ -8,11 +8,12 @@ TCP_PORT = 5005
 
 '''
 # RCON frame format
-# id      : int16_t
-# type    : int8_t
-# size    : uint16_t : size of the data field
+# '>'     : char
+# id      : uint16_t
+# type    : uint8_t
+# size    : uint8_t : size of the data field
 # data    : uint8_t[255]
-# end     : uint8_t
+# '<'     : uint8_t
 '''
 
 # proba ubrania tego w klase
@@ -31,13 +32,14 @@ class RconClient:
     
   def _get_data(self, packet_id, packet_type, packet_msg):
     data = bytearray()
-    data += struct.pack("<h", packet_id)
-    data += struct.pack("<b", packet_type)
+    data += b'>'
+    data += struct.pack("<H", packet_id)
+    data += struct.pack("<B", packet_type)
     size = len(packet_msg) +1  # +1 - null-terminating char
-    data += struct.pack("<H", size)
+    data += struct.pack("<B", size)
     data += packet_msg.encode()
     data += b'\x00'
-    data += b'\x00'
+    data += b'<'
     return data
   
   def send(self, type, msg, timeout_ms=100):

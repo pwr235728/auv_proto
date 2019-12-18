@@ -9,7 +9,7 @@ import time
 # poszukiwana sygnatura przy pozyskiwaniu adresu ip łodzi
 signature = "AUV\0"
 
-addr_res = AuvAR.AuvAddressResolver(udp_port=1234)
+addr_res = AuvAR.AuvAddressResolver(udp_port=5004)
 addr = ""
 
 try:
