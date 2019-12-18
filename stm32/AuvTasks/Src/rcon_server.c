@@ -33,6 +33,7 @@ err_t RconServer(rcon_server* server)
 
 	rcon_sender sender;
 	rcon_packet packet;
+	rcon_state parser_state;
 
 	while (1) {
 
@@ -50,10 +51,16 @@ err_t RconServer(rcon_server* server)
 			char* buf_iter = buf;
 			while(buflen--)
 			{
-				rcon_state parser_state = rcon_parse_byte(&packet, *buf_iter++);
+				parser_state = rcon_parse_byte(&packet, *buf_iter++);
 
 				if(parser_state == RCON_PACKET_COMPLETE){
-					// push packet to in_queue
+					if(packet.type == 1)
+						HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+					if(packet.type == 2)
+						HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+
+
 				}else if(parser_state == RCON_PACKET_INVALID){
 					// some bananas happend
 				}else{ //parser_state == RCON_PACKET_INCOMPLETE
