@@ -20,6 +20,21 @@
  * Maximum packet length is: 261 bytes
  */
 
+/*	Packet ID list:
+ * 	0	- RAW
+ * 	1	- send, ret: "ok\0"
+ * 	2	- getData, ret ID 3, 4 or 5
+ * 	3	- ansEnd - answer end
+ * 	4	- ansLong	- part of long answer
+ * 	5 	- error
+ */
+
+/* Control commands
+ * setDepth
+ * getDept
+ * enable depth control
+ *
+ */
 
 #define RCON_PACKET_HEADER_SIZE 5		// BEGIN_CHAR 1 byte, ID 2 bytes, Type 1 byte, Size 1 bytes
 #define RCON_PACKET_PAYLOAD_SIZE 256	// BODY 255 bytes, END '<' 1 byte

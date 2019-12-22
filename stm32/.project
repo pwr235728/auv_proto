@@ -74,7 +74,7 @@
 		<link>
 			<name>AuvRcon</name>
 			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/libs/AuvRcon</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/libs/AuvRcon</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

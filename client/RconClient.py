@@ -50,7 +50,7 @@ class RconClient:
     # receive the response
     # retransmit
     # etc    
-    return True
+    return self.counter
 
   def request(self, type, msg, timeout_ms=100):
       self.counter += 1
