@@ -10,9 +10,8 @@ TCP_PORT = 5005
 # RCON frame format
 # '>'     : char
 # id      : uint16_t
-# type    : uint8_t
 # size    : uint8_t : size of the data field
-# data    : uint8_t[255]
+# data    : uint8_t[255] binary data
 # '<'     : uint8_t
 '''
 
@@ -34,7 +33,6 @@ class RconClient:
     data = bytearray()
     data += b'>'
     data += struct.pack("<H", packet_id)
-    data += struct.pack("<B", packet_type)
     size = len(packet_msg) +1  # +1 - null-terminating char
     data += struct.pack("<B", size)
     data += packet_msg.encode()
@@ -42,9 +40,9 @@ class RconClient:
     data += b'<'
     return data
   
-  def send(self, type, msg, timeout_ms=100):
+  def send(self, msg, timeout_ms=100):
     self.counter += 1
-    data = self._get_data(self.counter, type, msg)
+    data = self._get_data(self.counter, msg)
     self.socket.sendto(data, self.dest)
     #self.connection.send(data)
     # receive the response
@@ -52,9 +50,9 @@ class RconClient:
     # etc    
     return self.counter
 
-  def request(self, type, msg, timeout_ms=100):
+  def request(self, msg, timeout_ms=100):
       self.counter += 1
-      data = self._get_data(self.counter, type, msg)
+      data = self._get_data(self.counter, msg)
       self.socket.sendto(data, self.dest)
 
   def recv(self):
@@ -70,7 +68,7 @@ def _example():
   while True:
     counter += 1
     print("packet nubmer:",counter)
-    client.send(1, "test")
+    client.send("test")
     #ret = client.recv()
     #print("ret: ", ret)
     #client.send(2, "test")

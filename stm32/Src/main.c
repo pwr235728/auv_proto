@@ -55,6 +55,9 @@ osStaticThreadDef_t rconServerTaskControlBlock;
 osThreadId addrBroadcastTaHandle;
 uint32_t addrBroadcastTaBuffer[ 256 ];
 osStaticThreadDef_t addrBroadcastTaControlBlock;
+osThreadId controlTaskHandle;
+uint32_t controlTaskBuffer[ 512 ];
+osStaticThreadDef_t controlTaskControlBlock;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -66,6 +69,7 @@ static void MX_USART3_UART_Init(void);
 void StartDefaultTask(void const * argument);
 extern void RconServerTask(void const * argument);
 extern void AddrBroadcastTask(void const * argument);
+extern void ControlTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -83,8 +87,6 @@ extern void AddrBroadcastTask(void const * argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	rcon_packet packet;
-	rcon_packet_reset(&packet);
   /* USER CODE END 1 */
   
 
@@ -139,6 +141,10 @@ int main(void)
   /* definition and creation of addrBroadcastTa */
   osThreadStaticDef(addrBroadcastTa, AddrBroadcastTask, osPriorityBelowNormal, 0, 256, addrBroadcastTaBuffer, &addrBroadcastTaControlBlock);
   addrBroadcastTaHandle = osThreadCreate(osThread(addrBroadcastTa), NULL);
+
+  /* definition and creation of controlTask */
+  osThreadStaticDef(controlTask, ControlTask, osPriorityHigh, 0, 512, controlTaskBuffer, &controlTaskControlBlock);
+  controlTaskHandle = osThreadCreate(osThread(controlTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

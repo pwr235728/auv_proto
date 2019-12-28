@@ -2,7 +2,7 @@
 
 typedef const char* module_tag_t;
 
-#define TAG_CMP(T1, T2)
+#define TAG_CMP(T1, T2) {}
 
 typedef struct module
 {
@@ -79,3 +79,16 @@ void AC_Task(void* args) // FreeRTOS task
     .
     .
 }
+
+
+
+//
+
+AuvRcon
+
+połączenie mempoola z queue
+
+
+
+MemPool (1)-------[posrednik]----(*)queue
+

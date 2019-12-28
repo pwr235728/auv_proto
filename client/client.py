@@ -32,11 +32,11 @@ while True:
 
   led = input("Podajnumer leda [1-3]: ")
   if led == "1":
-    client.send(1, "1")  
+    client.send("1")  
   if led == "2":
-    client.send(2, "2")  
+    client.send("2")  
   if led == "3":
-    client.send(3, "3")  
+    client.send("3")  
     
   time.sleep(0.05)  
 

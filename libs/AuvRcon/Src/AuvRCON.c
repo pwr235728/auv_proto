@@ -21,35 +21,37 @@ static const char rcon_begin_char = '>';
 static const char rcon_end_char = '<';
 
 
-void rcon_packet_reset(rcon_packet* packet)
+void rcon_parser_reset(rcon_parser* parser)
 {
-	packet->_rcon_data.index = 0;
-	packet->_rcon_data.state = _RCON_DATA_RESET;
+	parser->index = 0;
+	parser->state = _RCON_DATA_RESET;
 
-	packet->id = 0;		//(int16_t*)&(packet->_rcon_data.data[RCON_HEADER_ID]);
-	packet->type = 0;	//(int8_t*)&(packet->_rcon_data.data[RCON_HEADER_TYPE]);
-	packet->size = 0;	//&(packet->_rcon_data.data[RCON_HEADER_SIZE]);
-	packet->body = (packet->_rcon_data.data);
+	rcon_packet *packet = parser->packet;
+	packet->id = 0;
+	packet->module = 0;
+	packet->cmd = 0;
+	packet->size = 0;
 }
 
 // Sprawdzenie czy pakiet jest poprawny.
 // Czy jest znak początku i w odpowienim miejscu jest znak końca.
 // Czy minimalny rozmiar to 0, i czy jest znak "\0" na końcu BODY
-rcon_state rcon_check_packet(rcon_packet* packet) {
+rcon_state rcon_packet_check(rcon_packet* packet) {
+
 	if (packet->size > 0 &&
-			packet->body[packet->size - 1] == '\0' &&
-			packet->body[packet->size] == rcon_end_char) {
+			packet->data[packet->size - 1] == '\0' &&
+			packet->data[packet->size] == rcon_end_char) {
 		return RCON_PACKET_COMPLETE;
 	} else {
 		return RCON_PACKET_INVALID;
 	}
 }
 
-rcon_state rcon_parse_byte(rcon_packet* packet, uint8_t data)
+rcon_state rcon_parser_parse(rcon_parser* parser, uint8_t data)
 {
-	_rcon_data* rd = &(packet->_rcon_data);
+	rcon_packet *packet = parser->packet;
 
-	switch (rd->state) {
+	switch (parser->state) {
 
 	case _RCON_DATA_INVALID:
 	{	}
@@ -57,14 +59,14 @@ rcon_state rcon_parse_byte(rcon_packet* packet, uint8_t data)
 
 	case _RCON_DATA_RESET:
 	{
-		rcon_packet_reset(packet);
-		rd->state = _RCON_DATA_HEADER_RX;
+		rcon_parser_reset(parser);
+		parser->state = _RCON_DATA_HEADER_RX;
 	}
 	/* no break */
 
 	case _RCON_DATA_HEADER_RX:
 	{
-		rd->state = (data == rcon_begin_char)
+		parser->state = (data == rcon_begin_char)
 				? _RCON_DATA_HEADER_GOT_BEGIN
 				: _RCON_DATA_RESET;
 	}
@@ -72,60 +74,64 @@ rcon_state rcon_parse_byte(rcon_packet* packet, uint8_t data)
 
 	case _RCON_DATA_HEADER_GOT_BEGIN:
 	{
-		if(rd->index == 0)
+		if(parser->index == 0)
 			packet->id = data;
-		if(rd->index == 1)
+		if(parser->index == 1)
 			packet->id |= ((u16_t)data) << 8;
-		if(rd->index == 2)
-			packet->type = data;
-		if(rd->index == 3)
+		if(parser->index == 2)
+			packet->module = data;
+		if(parser->index == 3)
+			packet->cmd = data;
+		if(parser->index == 4)
 			packet->size = data;
 
-		rd->index++;
-		if((rd->index) == 4)
+		parser->index++;
+		if((parser->index) == 5)
 		{
-			rd->state = _RCON_DATA_GOT_HEADER;
+			parser->state = _RCON_DATA_GOT_HEADER;
 		}
 	}
 		break;
 
 	case _RCON_DATA_GOT_HEADER:
 	{
-		rd->index = 0;
-		rd->state = _RCON_DATA_PAYLOAD_RX;
+		parser->index = 0;
+		parser->state = _RCON_DATA_PAYLOAD_RX;
 	}
 	/* no break */
 	case _RCON_DATA_PAYLOAD_RX:
 	{
-		if (rd->index < packet->size + 1) {
-			rd->data[rd->index++] = data;
+		if (parser->index < packet->size + 1) {
+			packet->data[parser->index++] = data;
 		}
-		if (rd->index == packet->size+1) {
-			rd->state = _RCON_DATA_GOT_PAYLOAD;
+		if (parser->index == packet->size+1) {
+			parser->state = _RCON_DATA_GOT_PAYLOAD;
 		}
 	}
 		break;
 
 	default: {
 		/* some bananas happend */
-		rcon_packet_reset(packet);
+		rcon_parser_reset(parser);
 		// :(
 	}
 		break;
 	}
 
-	if (rd->state == _RCON_DATA_GOT_PAYLOAD) {
-		if (rcon_check_packet(packet) == RCON_PACKET_COMPLETE)
+	if (parser->state == _RCON_DATA_GOT_PAYLOAD) {
+		if (rcon_packet_check(packet) == RCON_PACKET_COMPLETE)
 		{
-			rd->state = _RCON_DATA_RESET;
+			parser->state = _RCON_DATA_RESET;
 			return RCON_PACKET_COMPLETE;
 		}
 		else
 		{
-			rd->state = _RCON_DATA_INVALID;
+			parser->state = _RCON_DATA_INVALID;
 			return RCON_PACKET_INVALID;
 		}
 	}
 
 	return RCON_PACKET_INCOMPLETE;
 }
+
+

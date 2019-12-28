@@ -51,12 +51,12 @@ err_t RconServer(rcon_server* server)
 			char* buf_iter = buf;
 			while(buflen--)
 			{
-				parser_state = rcon_parse_byte(&packet, *buf_iter++);
+				parser_state = rcon_parser_parse(&packet, *buf_iter++);
 
 				if(parser_state == RCON_PACKET_COMPLETE){
-					if(packet.type == 1)
+					if(packet.cmd == 1)
 						HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-					if(packet.type == 2)
+					if(packet.cmd == 2)
 						HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
 
