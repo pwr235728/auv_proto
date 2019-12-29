@@ -12,6 +12,7 @@
 
 #include "AuvRCON.h"
 #include "rcon_server.h"
+#include "packet_queue.h"
 
 rcon_server server;
 
@@ -32,7 +33,8 @@ err_t RconServer(rcon_server* server)
 	server->err = netconn_err(server->conn);
 
 	rcon_sender sender;
-	rcon_packet packet;
+	rcon_parser parser;
+	rcon_packet *packet;
 	rcon_state parser_state;
 
 	while (1) {
@@ -45,22 +47,25 @@ err_t RconServer(rcon_server* server)
 		sender.ip = *netbuf_fromaddr(server->buf);
 		sender.port = netbuf_fromport(server->buf);
 
+		if(!(packet = PacketQueue_Alloc()))
+		{
+			// No memory
+			// drop packet
+		}
+
+		rcon_parser_reset(&parser);
+		parser.packet = packet;
+
 		do {
 			netbuf_data(server->buf, (void**) &buf, &buflen);
 
 			char* buf_iter = buf;
 			while(buflen--)
 			{
-				parser_state = rcon_parser_parse(&packet, *buf_iter++);
+				parser_state = rcon_parser_parse(&parser, *buf_iter++);
 
 				if(parser_state == RCON_PACKET_COMPLETE){
-					if(packet.cmd == 1)
-						HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-					if(packet.cmd == 2)
-						HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-
-
-
+					PacketQueue_Enqueue(packet);
 				}else if(parser_state == RCON_PACKET_INVALID){
 					// some bananas happend
 				}else{ //parser_state == RCON_PACKET_INCOMPLETE

@@ -6,33 +6,33 @@
 
 #include "AuvRCON.h"
 #include "rcon_server.h"
-#include "module.h"
+#include "packet_queue.h"
 
-static const module_tag_t tag = 1;
-module_t module;
+static const pq_tag_t tag = 1;
 
-osMessageQDef(ctrl_msg, 16, rcon_packet*);
-osMessageQId ctrl_msg;
 
+packet_queue_t queue;
+rcon_packet *packet;
 
 void ControlTask(void *argument) {
 
-	// Create queue
-	ctrl_msg = osMessageCreate(osMessageQ(ctrl_msg), NULL);
+	queue = PacketQueue_Create(tag); // todo: error checking
 
-	if(ctrl_msg == NULL){
-		/* ERROR */
-		while(1){ osDelay(1000); }
-	}
-
-	//Register module
-	module = module_create(tag, ctrl_msg);
-	module_register(&module);
 
 	while (1) {
+		if((packet = PacketQueue_Get(&queue, osWaitForever)))
+		{
+			if(packet->cmd == 1)
+				HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+			if(packet->cmd == 2)
+				HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			if(packet->cmd == 3)
+				HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
 
-
-
-		osDelay(100);
+			PacketQueue_Free(packet);
+		}else
+		{
+			osDelay(100);
+		}
 	}
 }
