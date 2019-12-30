@@ -56,7 +56,7 @@ packet_queue_t* PacketQueue_Create(pq_tag_t tag)
 
 	queue->next = NULL;
 	queue->tag = tag;
-	queue->queue = osMessageCreate(&queue_def, NULL);
+	queue->queue = osMessageCreate(osMessageQ(module_queue), NULL);
 
 	if(!queue || !queue->queue)
 	{
