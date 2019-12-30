@@ -18,7 +18,7 @@ typedef struct packet_queue
 osStatus PacketQueue_Init(void);
 
 // Create queue for given tag
-osStatus PacketQueue_Create(packet_queue_t *queue, pq_tag_t tag);
+packet_queue_t* PacketQueue_Create(pq_tag_t tag);
 
 // Find queue with given tag
 packet_queue_t* PacketQueue_Find(pq_tag_t tag);

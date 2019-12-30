@@ -11,17 +11,17 @@
 static const pq_tag_t tag = 1;
 
 
-packet_queue_t queue;
+
 rcon_packet *packet;
 
 void ControlTask(void *argument) {
 
 	osDelay(15000);
-	PacketQueue_Create(&queue, tag); // todo: error checking
+	packet_queue_t* queue = PacketQueue_Create(tag); // todo: error checking
 
 
 	while (1) {
-		if((packet = PacketQueue_Recv(&queue, osWaitForever)))
+		if((packet = PacketQueue_Recv(queue, osWaitForever)))
 		{
 			if(packet->cmd == 1)
 				HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);

@@ -13,6 +13,9 @@ osMessageQDef_t queue_def = { (16), sizeof (rcon_packet*), NULL, NULL  };
 osPoolDef(rcon_pool, 32, rcon_packet);
 osPoolId rcon_pool;
 
+osPoolDef(queue_pool, 16, packet_queue_t);
+osPoolId queue_pool;
+
 osMessageQId ans_queue;
 
 packet_queue_list_t pq_list;
@@ -33,8 +36,9 @@ osStatus PacketQueue_Init(void)
 
 	ans_queue = osMessageCreate(&queue_def, NULL);
 	rcon_pool = osPoolCreate(osPool(rcon_pool));
+	queue_pool = osPoolCreate(osPool(queue_pool));
 
-	if(rcon_pool == NULL || ans_queue == NULL)
+	if(rcon_pool == NULL || ans_queue == NULL || queue_pool == NULL)
 	{
 		/* ERROR */
 		return osErrorResource;
@@ -42,16 +46,23 @@ osStatus PacketQueue_Init(void)
 
 	return osOK;
 }
-osStatus PacketQueue_Create(packet_queue_t *queue, pq_tag_t tag)
+packet_queue_t* PacketQueue_Create(pq_tag_t tag)
 {
+
+	packet_queue_t* queue = (packet_queue_t*)osPoolAlloc(queue_pool);
 
 	queue->next = NULL;
 	queue->tag = tag;
 	queue->queue = osMessageCreate(&queue_def, NULL);
 
+	if(!queue || !queue->queue)
+	{
+		return osErrorOS;
+	}
+
 	pq_list_add(queue);
 
-	return 	queue->queue != NULL ? osOK : osErrorOS;
+	return osOK;
 }
 packet_queue_t* PacketQueue_Find(pq_tag_t tag)
 {
