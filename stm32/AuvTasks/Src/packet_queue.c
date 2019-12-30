@@ -1,5 +1,9 @@
 #include "packet_queue.h"
 
+#define QUEUE_LENGTH	16
+#define PACKET_COUNT 	32
+#define QUEUE_COUNT 	16
+
 #define TAG_CMP(T1, T2) (T1 == T2)
 
 typedef struct
@@ -8,14 +12,13 @@ typedef struct
 	int16_t count;
 }packet_queue_list_t;
 
-osMessageQDef_t queue_def = { (16), sizeof (rcon_packet*), NULL, NULL  };
 
-osPoolDef(rcon_pool, 32, rcon_packet);
+osMessageQDef(module_queue, QUEUE_LENGTH, rcon_packet*);
+osPoolDef(rcon_pool, PACKET_COUNT, rcon_packet);
+osPoolDef(queue_pool, QUEUE_COUNT, packet_queue_t);
+
 osPoolId rcon_pool;
-
-osPoolDef(queue_pool, 16, packet_queue_t);
 osPoolId queue_pool;
-
 osMessageQId ans_queue;
 
 packet_queue_list_t pq_list;
@@ -34,7 +37,7 @@ osStatus PacketQueue_Init(void)
 	pq_list.count = 0;
 	pq_list.head = NULL;
 
-	ans_queue = osMessageCreate(&queue_def, NULL);
+	ans_queue = osMessageCreate(osMessageQ(module_queue), NULL);
 	rcon_pool = osPoolCreate(osPool(rcon_pool));
 	queue_pool = osPoolCreate(osPool(queue_pool));
 
