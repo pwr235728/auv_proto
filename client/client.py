@@ -4,6 +4,8 @@ import RconClient
 import time
 
 
+MODULE_CTRL = 1
+
 # Pozyskiwanie adresu IP łodzi
 
 # poszukiwana sygnatura przy pozyskiwaniu adresu ip łodzi
@@ -32,11 +34,11 @@ while True:
 
   led = input("Podajnumer leda [1-3]: ")
   if led == "1":
-    client.send("1")  
+    client.send(MODULE_CTRL, 1)  
   if led == "2":
-    client.send("2")  
+    client.send(MODULE_CTRL, 2)
   if led == "3":
-    client.send("3")  
+    client.send(MODULE_CTRL, 3)
     
   time.sleep(0.05)  
 

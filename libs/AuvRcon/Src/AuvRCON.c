@@ -38,9 +38,7 @@ void rcon_parser_reset(rcon_parser* parser)
 // Czy minimalny rozmiar to 0, i czy jest znak "\0" na końcu BODY
 rcon_state rcon_packet_check(rcon_packet* packet) {
 
-	if (packet->size > 0 &&
-			packet->data[packet->size - 1] == '\0' &&
-			packet->data[packet->size] == rcon_end_char) {
+	if (packet->data[packet->size] == rcon_end_char) {
 		return RCON_PACKET_COMPLETE;
 	} else {
 		return RCON_PACKET_INVALID;

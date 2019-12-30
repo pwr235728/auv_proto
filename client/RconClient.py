@@ -7,12 +7,15 @@ TCP_IP = '192.168.100.113'
 TCP_PORT = 5005
 
 '''
-# RCON frame format
-# '>'     : char
-# id      : uint16_t
-# size    : uint8_t : size of the data field
-# data    : uint8_t[255] binary data
-# '<'     : uint8_t
+ RCON frame format:
+ [ '>' | ID: u16 | Module: u8 | Cmd: u8 | LEN: u8 | BODY: 0-255 bytes | '<' ]
+ '>'     : char
+ id      : uint16_t
+ module  : uint8_t
+ cmd     : uint8_t
+ len     : uint8_t : length of the data field
+ data    : uint8_t[255] binary data
+ '<'     : uint8_t
 '''
 
 # proba ubrania tego w klase
@@ -29,31 +32,23 @@ class RconClient:
     # return some state or idk
     
     
-  def _get_data(self, packet_id, packet_type, packet_msg):
+  def _get_data(self, id, module, cmd, payload):
     data = bytearray()
     data += b'>'
-    data += struct.pack("<H", packet_id)
-    size = len(packet_msg) +1  # +1 - null-terminating char
+    data += struct.pack("<H", id)
+    data += struct.pack("<B", module)
+    data += struct.pack("<B", cmd)
+    size = len(payload)
     data += struct.pack("<B", size)
-    data += packet_msg.encode()
-    data += b'\x00'
+    data += payload
     data += b'<'
     return data
   
-  def send(self, msg, timeout_ms=100):
+  def send(self, module, cmd, payload = b'', timeout_ms=100):
     self.counter += 1
-    data = self._get_data(self.counter, msg)
+    data = self._get_data(self.counter, module, cmd, payload)
     self.socket.sendto(data, self.dest)
-    #self.connection.send(data)
-    # receive the response
-    # retransmit
-    # etc    
     return self.counter
-
-  def request(self, msg, timeout_ms=100):
-      self.counter += 1
-      data = self._get_data(self.counter, msg)
-      self.socket.sendto(data, self.dest)
 
   def recv(self):
     return self.socket.recv(1000)
@@ -64,16 +59,7 @@ def _example():
   client = RconClient()
   client.connect(TCP_IP, TCP_PORT)
 
-  counter = 0
-  while True:
-    counter += 1
-    print("packet nubmer:",counter)
-    client.send("test")
-    #ret = client.recv()
-    #print("ret: ", ret)
-    #client.send(2, "test")
-    
-    time.sleep(0.1)  
+  ...
     
     
     

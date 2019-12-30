@@ -37,6 +37,8 @@ err_t RconServer(rcon_server* server)
 	rcon_packet *packet;
 	rcon_state parser_state;
 
+	osStatus status = PacketQueue_Init();
+
 	while (1) {
 
 		if ((server->err = netconn_recv(server->conn, &(server->buf)))
@@ -66,10 +68,14 @@ err_t RconServer(rcon_server* server)
 
 				if(parser_state == RCON_PACKET_COMPLETE){
 					PacketQueue_Enqueue(packet);
-				}else if(parser_state == RCON_PACKET_INVALID){
-					// some bananas happend
-				}else{ //parser_state == RCON_PACKET_INCOMPLETE
-					// do nothing
+				}else
+				{
+
+					if(parser_state == RCON_PACKET_INVALID){
+						// some bananas happend
+					}else{ //parser_state == RCON_PACKET_INCOMPLETE
+						// do nothing
+					}
 				}
 			}
 		} while (netbuf_next(server->buf) >= 0);

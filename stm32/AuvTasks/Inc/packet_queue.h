@@ -18,7 +18,7 @@ typedef struct packet_queue
 osStatus PacketQueue_Init(void);
 
 // Create queue for given tag
-packet_queue_t PacketQueue_Create(pq_tag_t tag);
+osStatus PacketQueue_Create(packet_queue_t *queue, pq_tag_t tag);
 
 // Find queue with given tag
 packet_queue_t* PacketQueue_Find(pq_tag_t tag);
@@ -29,13 +29,14 @@ osStatus PacketQueue_Free(rcon_packet *packet);
 /* Task side only */
 // Get -> recv
 // Put -> send
-rcon_packet* PacketQueue_Get(packet_queue_t *queue, uint32_t millisec);
+rcon_packet* PacketQueue_Recv(packet_queue_t *queue, uint32_t millisec);
+osStatus PacketQueue_Send(rcon_packet *packet, uint32_t millisec);
 // PacketQueue_Put(..);
 
 
 /* Server side only */
 osStatus PacketQueue_Enqueue(rcon_packet *packet);
-// PacketQueue_Dequeue(...);
+rcon_packet* PacketQueue_Dequeue(void);
 
 
 #endif /* PACKET_QUEUE_H_ */
