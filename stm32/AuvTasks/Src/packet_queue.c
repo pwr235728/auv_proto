@@ -53,19 +53,24 @@ packet_queue_t* PacketQueue_Create(pq_tag_t tag)
 {
 
 	packet_queue_t* queue = (packet_queue_t*)osPoolAlloc(queue_pool);
+	if(!queue)
+	{
+		return NULL;
+	}
 
 	queue->next = NULL;
 	queue->tag = tag;
 	queue->queue = osMessageCreate(osMessageQ(module_queue), NULL);
 
-	if(!queue || !queue->queue)
+	if(!queue->queue)
 	{
-		return osErrorOS;
+		osPoolFree(queue_pool, (void*)queue);
+		return NULL;
 	}
 
 	pq_list_add(queue);
 
-	return osOK;
+	return queue;
 }
 packet_queue_t* PacketQueue_Find(pq_tag_t tag)
 {
