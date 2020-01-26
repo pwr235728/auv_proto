@@ -11,18 +11,21 @@ signature = "AUV"
 
 LOCAL = True
 
-if not LOCAL:
+if LOCAL:
     discoverer = AuvDiscoverer.AuvDiscoverer()
-    target = discoverer.FindAuv(signature)
+    auvHost = discoverer.FindAuv(signature)
 else:
-    target = ('127.0.0.1', bytearray(12))
+    auvHost = ('127.0.0.1', bytearray(12))
 
 connection = EthConnection.EthConnection()
 
-session = RconSession.RconSession(connection, (target[0], 5005))
+dispatcher = Dispatcher(auvHost)
 
 
-controller = AuvControll.AuvControll(session)
+session = RconSession.RconSession(connection, target)
+
+
+controller = AuvControll.AuvControll(serializer, session)
 depth = 0
 while True:
     depth += 2

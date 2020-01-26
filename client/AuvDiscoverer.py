@@ -1,8 +1,11 @@
 import socket
 import time
 
-class AuvAddressResolver:
-    def __init__(self, udp_port=5005):
+import EthConnection
+from RconSerializer import RconSerializer
+
+class AuvDiscoverer:
+    def __init__(self, udp_port=5004):
         self.UDP_IP = ''
         self.UDP_PORT = udp_port
 
@@ -11,8 +14,7 @@ class AuvAddressResolver:
         self.sock.bind((self.UDP_IP, self.UDP_PORT))
         self.sock.settimeout(0)
 
-
-    def acquireAddress(self, signature="AUV", timeout=15):
+    def FindAuv(self, signature="AUV", timeout=15):
         time_left = timeout # s
 
         print("Acquiring server ip address...")
@@ -21,24 +23,12 @@ class AuvAddressResolver:
             time_left -= 1
             try:
                 data, addr = self.sock.recvfrom(1024)
-                if data == signature.encode():
-                    return addr[0]
+                sig, uid = RconSerializer.decode_IsAliveMsg(data)
+                if sig == signature.encode():
+                    return (addr[0], uid)
             except:
                 pass
 
             time.sleep(1)
 
         raise Exception('Address acquisition timed out')
-
-
-# example code
-def _example():
-    res = AuvAddressResolver()
-
-    try:
-        addr = res.acquireAddress(signature="AUV2.0", timeout=20)
-    except Exception as err:
-        print(err) 
-        raise err
-
-    print("Acquired IP address: ", addr)       
