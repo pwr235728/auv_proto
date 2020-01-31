@@ -1,3 +1,3 @@
 (sym_lib_table
-  (lib (name NUCLEO-F746ZG)(type Legacy)(uri ${KIPRJMOD}/libs/NUCLEO-F746ZG.lib)(options "")(descr ""))
+  (lib (name NUCLEO-F767ZI)(type Legacy)(uri ${KIPRJMOD}/libs/NUCLEO-F767ZI.lib)(options "")(descr ""))
 )
