@@ -18,7 +18,7 @@ TIM4_CH3
 Text Label 5625 10150 0    50   ~ 0
 TIM4_CH4
 Wire Wire Line
-	5550 4050 5625 4050
+	5550 4150 5625 4150
 Wire Wire Line
 	5625 5350 5550 5350
 Wire Wire Line
@@ -3679,7 +3679,7 @@ Wire Wire Line
 	15800 13225 15800 13275
 Text Label 5650 7750 0    50   ~ 0
 TIM3_CH1
-Text Label 5625 4050 0    50   ~ 0
+Text Label 5625 4150 0    50   ~ 0
 TIM3_CH2
 Text Label 5625 5350 0    50   ~ 0
 TIM3_CH4

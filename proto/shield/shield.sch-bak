@@ -33,15 +33,15 @@ Wire Wire Line
 	5550 10050 5625 10050
 Wire Wire Line
 	5550 10150 5625 10150
-Text Label 5675 7150 0    50   ~ 0
-IO1
-Text Label 5675 7250 0    50   ~ 0
-IO2
 Text Label 5675 8850 0    50   ~ 0
+IO1
+Text Label 5675 7150 0    50   ~ 0
+IO2
+Text Label 5675 7250 0    50   ~ 0
 IO3
-Text Label 5675 8950 0    50   ~ 0
-IO4
 Text Label 5675 9050 0    50   ~ 0
+IO4
+Text Label 5675 8950 0    50   ~ 0
 IO5
 Text Label 2950 5450 2    50   ~ 0
 IO6
