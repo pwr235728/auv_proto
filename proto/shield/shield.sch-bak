@@ -13,14 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Label 5625 4050 0    50   ~ 0
-TIM3_CH1
-Text Label 5625 5350 0    50   ~ 0
-TIM3_CH2
-Text Label 5625 9850 0    50   ~ 0
-TIM4_CH1
-Text Label 5625 9950 0    50   ~ 0
-TIM4_CH2
 Text Label 5625 10050 0    50   ~ 0
 TIM4_CH3
 Text Label 5625 10150 0    50   ~ 0
@@ -3595,8 +3587,6 @@ F 3 "https://www.st.com/content/ccc/resource/technical/document/user_manual/grou
 	1    4250 6850
 	1    0    0    -1  
 $EndComp
-Text Label 5650 7750 0    50   ~ 0
-TIM3_CH4
 Text Label 5650 7650 0    50   ~ 0
 TIM3_CH3
 Text Label 5850 9150 0    50   ~ 0
@@ -3639,21 +3629,21 @@ Wire Wire Line
 Wire Wire Line
 	15700 12225 15700 12150
 $Comp
-L Connector_Generic:Conn_01x04 J?
+L Connector_Generic:Conn_01x04 J25
 U 1 1 5E5B201C
 P 16075 13025
-F 0 "J?" H 16155 13018 50  0000 L CNN
+F 0 "J25" H 16155 13018 50  0000 L CNN
 F 1 "Conn_01x04" H 16155 12925 50  0000 L CNN
-F 2 "" H 16075 13025 50  0001 C CNN
+F 2 "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical" H 16075 13025 50  0001 C CNN
 F 3 "~" H 16075 13025 50  0001 C CNN
 	1    16075 13025
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+5VD #PWR?
+L power:+5VD #PWR0125
 U 1 1 5E5B3314
 P 15825 12875
-F 0 "#PWR?" H 15825 12725 50  0001 C CNN
+F 0 "#PWR0125" H 15825 12725 50  0001 C CNN
 F 1 "+5VD" H 15840 13050 50  0000 C CNN
 F 2 "" H 15825 12875 50  0001 C CNN
 F 3 "" H 15825 12875 50  0001 C CNN
@@ -3661,10 +3651,10 @@ F 3 "" H 15825 12875 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GNDD #PWR?
+L power:GNDD #PWR0126
 U 1 1 5E5B372F
 P 15800 13275
-F 0 "#PWR?" H 15800 13025 50  0001 C CNN
+F 0 "#PWR0126" H 15800 13025 50  0001 C CNN
 F 1 "GNDD" H 15804 13119 50  0000 C CNN
 F 2 "" H 15800 13275 50  0001 C CNN
 F 3 "" H 15800 13275 50  0001 C CNN
@@ -3687,4 +3677,14 @@ Wire Wire Line
 	15875 13225 15800 13225
 Wire Wire Line
 	15800 13225 15800 13275
+Text Label 5650 7750 0    50   ~ 0
+TIM3_CH1
+Text Label 5625 4050 0    50   ~ 0
+TIM3_CH2
+Text Label 5625 5350 0    50   ~ 0
+TIM3_CH4
+Text Label 5625 9950 0    50   ~ 0
+TIM4_CH1
+Text Label 5625 9850 0    50   ~ 0
+TIM4_CH2
 $EndSCHEMATC

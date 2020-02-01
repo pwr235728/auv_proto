@@ -13,14 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Label 5625 4050 0    50   ~ 0
-TIM3_CH1
-Text Label 5625 5350 0    50   ~ 0
-TIM3_CH2
-Text Label 5625 9850 0    50   ~ 0
-TIM4_CH1
-Text Label 5625 9950 0    50   ~ 0
-TIM4_CH2
 Text Label 5625 10050 0    50   ~ 0
 TIM4_CH3
 Text Label 5625 10150 0    50   ~ 0
@@ -41,15 +33,15 @@ Wire Wire Line
 	5550 10050 5625 10050
 Wire Wire Line
 	5550 10150 5625 10150
-Text Label 5675 7150 0    50   ~ 0
-IO1
-Text Label 5675 7250 0    50   ~ 0
-IO2
 Text Label 5675 8850 0    50   ~ 0
+IO1
+Text Label 5675 7150 0    50   ~ 0
+IO2
+Text Label 5675 7250 0    50   ~ 0
 IO3
-Text Label 5675 8950 0    50   ~ 0
-IO4
 Text Label 5675 9050 0    50   ~ 0
+IO4
+Text Label 5675 8950 0    50   ~ 0
 IO5
 Text Label 2950 5450 2    50   ~ 0
 IO6
@@ -3595,8 +3587,6 @@ F 3 "https://www.st.com/content/ccc/resource/technical/document/user_manual/grou
 	1    4250 6850
 	1    0    0    -1  
 $EndComp
-Text Label 5650 7750 0    50   ~ 0
-TIM3_CH4
 Text Label 5650 7650 0    50   ~ 0
 TIM3_CH3
 Text Label 5850 9150 0    50   ~ 0
@@ -3687,4 +3677,14 @@ Wire Wire Line
 	15875 13225 15800 13225
 Wire Wire Line
 	15800 13225 15800 13275
+Text Label 5650 7750 0    50   ~ 0
+TIM3_CH1
+Text Label 5625 4050 0    50   ~ 0
+TIM3_CH2
+Text Label 5625 5350 0    50   ~ 0
+TIM3_CH4
+Text Label 5625 9950 0    50   ~ 0
+TIM4_CH1
+Text Label 5625 9850 0    50   ~ 0
+TIM4_CH2
 $EndSCHEMATC
