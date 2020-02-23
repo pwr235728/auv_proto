@@ -1,0 +1,19 @@
+
+SessionManager
+    -> implement EthConnection
+    -> implement EthRovDiscoverer
+    -> Test EthRovDiscoverer
+
+Serializer:
+    -> implement basic protocol
+    -> (+) implement prophy version
+
+MessageBroker:
+    -> implement messages serialization/deserialization
+    -> implement mapping local tasks(Modules) with messages 
+
+Target:
+    -> 
+
+Module:
+    -> implement simple thruster controller
