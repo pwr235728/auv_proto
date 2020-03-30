@@ -1,0 +1,52 @@
+
+
+udp:
+
+          -framing          - {"ROV":char[3],len:u8,payload[len]}
+payload[] -module_container - {id:u8,len_data:u8, data[len]}
+data[]    -serialzier       - {raw_data}
+
+{"ROV", len, module_id, len_data, raw_data}
+
+
+
+
+protocol = frame(pdu(serializer()))
+
+
+#######################################
+udp <-> msg dispatcher
+
+msg groups:
+    thrustersControll
+    sensorData
+
+
+thrustersControll:
+    setThrust(thrusters)
+    getThrust()
+
+#######################################
+
+rov_conf = {
+    signature: "AUV",
+    signature_period = 5,
+    address_discoverer_port: 5004,
+    communication_port: 5005
+}
+
+
+udp <> session [protocol] <> session_supervisor [rov_conf] <> dispatcher <> handlers
+
+
+session = createSession(session_configuration, dispatcher)
+
+example:
+session.start()
+session.stop()
+status = session.status()
+
+
+thrusters = thrustersControll(dispatcher)
+
+thrusters.setThrust(thrust[8])

@@ -1,22 +1,30 @@
-from port import Port
-from module import Module
-import queue
+import rov_module
+import sys, threading, time
+import enum
 
-class RovCore:
-    def __init__(self, dispacher, port):
-        self.dispatcher = dispacher
-        self.port = port
+class ROV(enum.Enum):
+    ETHERNET = 1
 
-        self.input_queue = queue.Queue()
-        self.output_queue = queue.Queue()
+class RovApplication:
+    @staticmethod
+    def create(rov_type):
+        assert rov_type in ROV, "{0} is not valid value."
+        if rov_type == ROV.ETHERNET:
+            return __create_ethernet()
 
+    @staticmethod
+    def __create_ethernet():
+
+
+
+class RovApp():
+    def __init__(self, link):
+        self.module_list = []
         self.__processor_thread = \
             threading.Thread(target=__processor_loop, args=(self,))
         self.__processor_thread.daemon = True
 
     def bind_module(self, rov_module):
-        module_queue = rov_module.
-
         if not isinstance(rov_module, rov_module.RovModule):
             raise Exception("Given module is not a instance of RovModule")
 
